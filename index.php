@@ -19,13 +19,15 @@ if (isset($_POST['nombre']) || isset($_POST['operation'])) {
     }
   } else {
 	// sinon si on appui sur une opration
-	//on save B dans A comme sa on recupere b pour la suite
-    $_SESSION['a'] = $_SESSION['b'];
+	//on save B ou le resultat dans A comme sa on recupere b pour la suite
+    $_SESSION['a'] = isset($_SESSION['result']) ? $_SESSION['result'] : $_SESSION['b'];
 	// et on remet b a zero  comme sa on mes le 2 eme chiffre a l'interieur
     $_SESSION['b'] = "";
 	// on save operation dans session operation ( +,-,*,/)
     $_SESSION['operation'] = $_POST['operation'];
   }
+
+  
   if (isset($_SESSION['a'], $_SESSION['b'], $_SESSION['operation']) && is_numeric($_SESSION['a']) && is_numeric($_SESSION['b'])) {
     if ($_SESSION['operation'] == "+") {
       $result = $calculatrice->addition(($_SESSION['a']),($_SESSION['b']));
@@ -35,6 +37,8 @@ if (isset($_POST['nombre']) || isset($_POST['operation'])) {
       $result = $calculatrice->multiplication(($_SESSION['a']),($_SESSION['b']));
     } else if ($_SESSION['operation'] == "/") {
       $result = $calculatrice->division(($_SESSION['a']),($_SESSION['b']));
+    }else if ($_SESSION['operation'] == "%") {
+      $result = $calculatrice->pourcentage(($_SESSION['a']),($_SESSION['b']));
     }
     $_SESSION['result'] = $result;
   }
@@ -70,6 +74,7 @@ $operation = $_SESSION['operation'] ?? '';
     <button name="operation" value="*">*</button>
     <button name="clear" value="C">C</button>
     <button name="operation" value="/">/</button>
+    <button name="operation" value="%">%</button>
 </form>
 
 <p><?= "$a $operation $b = " . ($result ?? '??') ?></p>

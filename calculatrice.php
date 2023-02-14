@@ -17,4 +17,8 @@ class Calculatrice {
     public function division(float $a, float $b) {
       return $a / $b;
     }
+  
+    public function pourcentage(float $a, float $b) {
+      return ($a * $b) / 100;
+    }
   }
