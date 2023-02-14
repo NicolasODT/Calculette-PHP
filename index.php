@@ -21,9 +21,9 @@ if (isset($_POST['nombre']) || isset($_POST['operation'])) {
 	// sinon si on appui sur une opration
 	//on save B dans A comme sa on recupere b pour la suite
     $_SESSION['a'] = $_SESSION['b'];
-	// et on remet b a zero 
+	// et on remet b a zero  comme sa on mes le 2 eme chiffre a l'interieur
     $_SESSION['b'] = "";
-	// on save operation dans session operation
+	// on save operation dans session operation ( +,-,*,/)
     $_SESSION['operation'] = $_POST['operation'];
   }
   if (isset($_SESSION['a'], $_SESSION['b'], $_SESSION['operation']) && is_numeric($_SESSION['a']) && is_numeric($_SESSION['b'])) {
