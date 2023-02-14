@@ -10,12 +10,12 @@ $calculatrice = new Calculatrice();
 if (isset($_POST['nombre']) || isset($_POST['operation'])) {
 	//si on appuie sur un chiffre
   if (isset($_POST['nombre'])) {
-	//si session b n'existe pas car on vas le delete apres donc on reviendras ici 
+	//si session b n'existe pas 
     if (!isset($_SESSION['b'])) {
       $_SESSION['b'] = $_POST['nombre'];
     } else {
-		//sinon on ajoute la valeur du nombre clique a la fin de la session b
-      $_SESSION['b'] .= $_POST['nombre'];
+      //sinon on ajoute la valeur du nombre clique a la fin de la session b
+        $_SESSION['b'] .= $_POST['nombre'];
     }
   } else {
 	// sinon si on appui sur une opration
