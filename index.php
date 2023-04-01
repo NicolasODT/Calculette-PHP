@@ -1,52 +1,57 @@
 <?php
-session_name('ccalculette');
+session_name('calculatrice');
 session_start();
 
-require_once "./calculatrice.php";
+require_once "./Calculatrice.php";
 
 $calculatrice = new Calculatrice();
 
-// si on appui sur un bouton
+// Si un nombre ou une opération est sélectionné
 if (isset($_POST['nombre']) || isset($_POST['operation'])) {
-	//si on appuie sur un chiffre
-  if (isset($_POST['nombre'])) {
-	//si session b n'existe pas 
-    if (!isset($_SESSION['b'])) {
-      $_SESSION['b'] = $_POST['nombre'];
+    // Si un nombre est sélectionné
+    if (isset($_POST['nombre'])) {
+        // Si la session 'b' n'existe pas
+        if (!isset($_SESSION['b'])) {
+            $_SESSION['b'] = $_POST['nombre'];
+        } else {
+            // Sinon, ajoute la valeur du nombre sélectionné à la session 'b'
+            $_SESSION['b'] .= $_POST['nombre'];
+        }
     } else {
-      //sinon on ajoute la valeur du nombre clique a la fin de la session b
-        $_SESSION['b'] .= $_POST['nombre'];
+        // Si une opération est sélectionnée
+        // Enregistre 'b' ou le résultat précédent dans 'a'
+        $_SESSION['a'] = isset($_SESSION['result']) ? $_SESSION['result'] : $_SESSION['b'];
+        // Réinitialise 'b' pour y stocker le deuxième nombre
+        $_SESSION['b'] = "";
+        // Enregistre l'opération dans la session 'operation'
+        $_SESSION['operation'] = $_POST['operation'];
     }
-  } else {
-	// sinon si on appui sur une opration
-	//on save B ou le resultat dans A comme sa on recupere b pour la suite
-    $_SESSION['a'] = isset($_SESSION['result']) ? $_SESSION['result'] : $_SESSION['b'];
-	// et on remet b a zero  comme sa on mes le 2 eme chiffre a l'interieur
-    $_SESSION['b'] = "";
-	// on save operation dans session operation ( +,-,*,/)
-    $_SESSION['operation'] = $_POST['operation'];
-  }
 
-  
-  if (isset($_SESSION['a'], $_SESSION['b'], $_SESSION['operation']) && is_numeric($_SESSION['a']) && is_numeric($_SESSION['b'])) {
-    if ($_SESSION['operation'] == "+") {
-      $result = $calculatrice->addition(($_SESSION['a']),($_SESSION['b']));
-    } else if ($_SESSION['operation'] == "-") {
-      $result = $calculatrice->soustraction(($_SESSION['a']),($_SESSION['b']));
-    } else if ($_SESSION['operation'] == "*") {
-      $result = $calculatrice->multiplication(($_SESSION['a']),($_SESSION['b']));
-    } else if ($_SESSION['operation'] == "/") {
-      $result = $calculatrice->division(($_SESSION['a']),($_SESSION['b']));
-    }else if ($_SESSION['operation'] == "%") {
-      $result = $calculatrice->pourcentage(($_SESSION['a']),($_SESSION['b']));
+    // Si 'a', 'b' et 'operation' sont définis et que 'a' et 'b' sont des nombres
+    if (isset($_SESSION['a'], $_SESSION['b'], $_SESSION['operation']) && is_numeric($_SESSION['a']) && is_numeric($_SESSION['b'])) {
+        $operation = $_SESSION['operation'];
+        $a = $_SESSION['a'];
+        $b = $_SESSION['b'];
+
+        $result = null;
+        if ($operation == "+") {
+            $result = $calculatrice->addition($a, $b);
+        } elseif ($operation == "-") {
+            $result = $calculatrice->soustraction($a, $b);
+        } elseif ($operation == "*") {
+            $result = $calculatrice->multiplication($a, $b);
+        } elseif ($operation == "/") {
+            $result = $calculatrice->division($a, $b);
+        } elseif ($operation == "%") {
+            $result = $calculatrice->pourcentage($a, $b);
+        }
+        $_SESSION['result'] = $result;
     }
-    $_SESSION['result'] = $result;
-  }
 }
 
-// reset si on click sur C
+// Réinitialise la session si 'C' est sélectionné
 if (isset($_POST['clear'])) {
-  session_unset();
+    session_unset();
 }
 
 $a = $_SESSION['a'] ?? '';
